@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPainter>
+#include <QPixmap>
+#include <QMouseEvent>
+#include <qDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,8 +42,17 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
+    //鼠标按下的分量
+    QPoint m_pos;
+
+    //窗口目前的位置
+    QPoint current_pos;
+
     //眨眼动画的定时器
     QTimer *timer;
+
+    //存放图片
+    QPixmap pix;
 
     //绘图事件
     void paintEvent(QPaintEvent *);
