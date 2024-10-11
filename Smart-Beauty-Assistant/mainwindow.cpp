@@ -8,11 +8,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //菜单属性
-    QMenu* menue = new QMenu;
-
-    this->menue->popup(QCursor::pos());
-
     //设置窗口图标
     this->setWindowIcon(QIcon(":/sound/other/btn1.png"));
     //去除边框
@@ -23,13 +18,13 @@ MainWindow::MainWindow(QWidget *parent)
     this->setAttribute(Qt::WA_TranslucentBackground);
 
     // 将窗口固定大小
-    QBitmap bmp(this->size());//设置圆角边框
-    bmp.fill();
-    QPainter p(&bmp);
-    p.setPen(Qt::NoPen);
-    p.setBrush(Qt::black);
-    p.drawRoundedRect(bmp.rect(),50,50);
-    setMask(bmp);
+    // QBitmap bmp(this->size());//设置圆角边框
+    // bmp.fill();
+    // QPainter p(&bmp);
+    // p.setPen(Qt::NoPen);
+    // p.setBrush(Qt::black);
+    // p.drawRoundedRect(bmp.rect(),50,50);
+    // setMask(bmp);
 
 
     //初始化定时器
@@ -52,7 +47,10 @@ MainWindow::MainWindow(QWidget *parent)
     //初始化动作
     showActAnimation(Act::Work);
 
-
+    //菜单属性
+    QMenu* menue = new QMenu(tr("File"), this);
+    //初始化菜单
+    initMenue();
 
     /*设置窗口顶层让图标消失
     this->setWindowFlags(this->windowFlags() |Qt::Tool);
@@ -177,26 +175,7 @@ void MainWindow::On_MenuTriggered(QAction *act)
         qDebug() << List.key(i); // 打印枚举的键名
     }
     qDebug() << act->text();
-    // bool ok;
-    // me.keyToValue(action->data().toString().c_str(),&ok);
-    // if(!ok) return ;
 
-    // switch ("Work") {
-    // case "眨眼":
-    //     showActAnimation(Act::Blink);
-    //     break;
-    // case "昏昏欲睡":
-    //     showActAnimation(Act::Drag);
-    //     break;
-    // case "睡觉":
-    //     showActAnimation(Act::Sleep);
-    //     break;
-    // case "走路":
-    //     showActAnimation(Act::Work);
-    //     break;
-    // default:
-    //     break;
-    // }
     QString Action = act->text();
     if (Action == "眨眼") {
         showActAnimation(Act::Blink);
@@ -233,6 +212,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 void MainWindow::contextMenuEvent()
 {
     this->menue->popup(QCursor::pos());
+    qDebug() << " 1";
 }
 
 /*
@@ -242,18 +222,41 @@ void MainWindow::contextMenuEvent()
 */
 void MainWindow::initMenue()
 {
-    contextMenuEvent();
-    menue->addAction("眨眼");
-    menue->addAction("昏昏欲睡");
-    menue->addAction("睡觉");
-    menue->addAction("走路");
-    menue->addAction("隐藏");
-    QAction * act = new QAction("隐藏");
+    // contextMenuEvent();
+    // menue->addAction("眨眼");
+    // menue->addAction("昏昏欲睡");
+    // menue->addAction("睡觉");
+    // menue->addAction("走路");
+    // menue->addAction("隐藏");
+    // QAction * act = new QAction("隐藏");
 
-    connect(act, &QAction::triggered,[this](){
-            this->setVisible(false);
-        });
+    // connect(act, &QAction::triggered,[this](){
+    //         this->setVisible(false);
+    //     });
 
-    connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
+    // connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
 
+    //创建菜单
+    QMenu* menu1 = new QMenu("文件");
+    QMenu* menu2 = new QMenu("编辑");
+    QMenu* menu3 = new QMenu("构建");
+
+    QMenuBar* menubar = this->menuBar();
+
+    this->setMenuBar(menubar);
+    //添加菜单到菜单栏中
+    menubar->addMenu(menu1);
+    menubar->addMenu(menu2);
+    menubar->addMenu(menu3);
+
+    //创建菜单项
+    QAction* action1 = new QAction("新建");
+    QAction* action2 = new QAction("打开");
+    QAction* action3 = new QAction("保存");
+    //添加菜单项到菜单中
+    menu1->addAction(action1);
+    menu1->addAction(action2);
+    menu1->addAction(action3);
+
+    qDebug() << " 2";
 }
