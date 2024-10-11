@@ -1,4 +1,4 @@
- #include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <string>
 
@@ -7,6 +7,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //菜单属性
+    QMenu* menue = new QMenu;
+
+    this->menue->popup(QCursor::pos());
 
     //设置窗口图标
     this->setWindowIcon(QIcon(":/sound/other/btn1.png"));
@@ -36,13 +41,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(timer, &QTimer::timeout,[this](){
         static int index = 0; //记录显示动作的当前图片索引
         auto paths = this->action_map.value(this->cur_role_act);
-
+        index %= paths.size();
         this->cur_role_pix = paths[index++ % paths.size()];
+
+        //qDebug() << index ;
 
         this->update();
     } );
 
-    showActAnimation(Act::Blink);
+    //初始化动作
+    showActAnimation(Act::Work);
+
 
 
     /*设置窗口顶层让图标消失
@@ -78,8 +87,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
          *  this->current_pos = QPoint(e->globalPos()-m_pos);
          *  this->move(e->globalPos()-this->m_pos);
         */
-
-        pix.load(":/sound/img/shime111.png");
         this->current_pos = QPoint(event->globalPosition().toPoint() - m_pos);
         this->move(event->globalPosition().toPoint()-this->m_pos);
     }
@@ -106,56 +113,6 @@ void MainWindow::enterEvent(QEvent *event)
 {
     qDebug() << "Mouse Move Event:" ;
 }
-
-// /*
-//     功能： 动画显示
-//     参数：void
-//     返回值：void
-// */
-// void MainWindow::showMovie()
-// {
-
-// }
-
-// /*
-//     功能： 动画显示
-//     参数：void
-//     返回值：void
-// */
-// void MainWindow::showMovie1()
-// {
-
-// }
-
-// /*
-//     功能： 动画显示
-//     参数：void
-//     返回值：void
-// */
-// void MainWindow::showMovie2()
-// {
-
-// }
-
-// /*
-//     功能： 动画显示
-//     参数：void
-//     返回值：void
-// */
-// void MainWindow::showMovie3()
-// {
-
-// }
-
-// /*
-//     功能： 动画显示
-//     参数：void
-//     返回值：void
-// */
-// void MainWindow::showMovie3Move()
-// {
-
-// }
 
 /*
     功能： 加载图片, 将动作映射到Map中
@@ -186,7 +143,11 @@ void MainWindow::loadRoleActRes()
         //完成动作与素材间的映射
         action_map.insert(act, paths);
     };
+
     addRes(Act::Blink,":/sound/img/shime11",3);
+    addRes(Act::Drowse,":/sound/img/shime22",5);
+    addRes(Act::Sleep,":/sound/img/shime33",7);
+    addRes(Act::Work,":/sound/img/shime44",2);
 }
 
 /*
@@ -200,7 +161,54 @@ void MainWindow::showActAnimation(Act::RoleAct act)
 
     this->cur_role_act = act;
 
-    timer->start(120);
+    timer->start(240);
+}
+
+/*
+    功能： 切换点击事件
+    参数：QAction *action
+    返回值：void
+*/
+void MainWindow::On_MenuTriggered(QAction *act)
+{
+    QMetaEnum List = QMetaEnum::fromType<Act::RoleAct>();
+
+    for (int i = 0; i < List.keyCount(); ++i) {
+        qDebug() << List.key(i); // 打印枚举的键名
+    }
+    qDebug() << act->text();
+    // bool ok;
+    // me.keyToValue(action->data().toString().c_str(),&ok);
+    // if(!ok) return ;
+
+    // switch ("Work") {
+    // case "眨眼":
+    //     showActAnimation(Act::Blink);
+    //     break;
+    // case "昏昏欲睡":
+    //     showActAnimation(Act::Drag);
+    //     break;
+    // case "睡觉":
+    //     showActAnimation(Act::Sleep);
+    //     break;
+    // case "走路":
+    //     showActAnimation(Act::Work);
+    //     break;
+    // default:
+    //     break;
+    // }
+    QString Action = act->text();
+    if (Action == "眨眼") {
+        showActAnimation(Act::Blink);
+    } else if (Action == "昏昏欲睡") {
+        showActAnimation(Act::Drag);
+    } else if (Action == "睡觉") {
+        showActAnimation(Act::Sleep);
+    } else if (Action == "走路") {
+        showActAnimation(Act::Work);
+    } else {
+        // 默认情况
+    }
 }
 
 /*
@@ -215,4 +223,37 @@ void MainWindow::paintEvent(QPaintEvent *event)
     pix.load(this->cur_role_pix.toLocalFile());
     //绘制图片
     painter.drawPixmap(0,0,pix);
+}
+
+/*
+    功能： 菜单
+    参数：void
+    返回值：void
+*/
+void MainWindow::contextMenuEvent()
+{
+    this->menue->popup(QCursor::pos());
+}
+
+/*
+    功能： 初始化菜单
+    参数：void
+    返回值：void
+*/
+void MainWindow::initMenue()
+{
+    contextMenuEvent();
+    menue->addAction("眨眼");
+    menue->addAction("昏昏欲睡");
+    menue->addAction("睡觉");
+    menue->addAction("走路");
+    menue->addAction("隐藏");
+    QAction * act = new QAction("隐藏");
+
+    connect(act, &QAction::triggered,[this](){
+            this->setVisible(false);
+        });
+
+    connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
+
 }
