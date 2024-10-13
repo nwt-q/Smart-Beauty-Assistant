@@ -50,9 +50,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     //鼠标移动
-    void mouseMoveEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event) override;
     //鼠标按下
-    void mousePressEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event) override;
     //鼠标移入
     void enterEvent(QEvent *event);
 
@@ -62,7 +62,7 @@ public slots:
     // 展示Animation(动画)
     void showActAnimation(Act::RoleAct);
     //接收点击事件切换动作
-    void On_MenuTriggered(QAction* action);
+    void On_MenuTriggered(QAction* act);
 
 private:
     //菜单

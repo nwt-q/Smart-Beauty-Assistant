@@ -17,14 +17,15 @@ MainWindow::MainWindow(QWidget *parent)
     //this->setWindowOpacity(1);
     this->setAttribute(Qt::WA_TranslucentBackground);
 
+
     // 将窗口固定大小
-    // QBitmap bmp(this->size());//设置圆角边框
-    // bmp.fill();
-    // QPainter p(&bmp);
-    // p.setPen(Qt::NoPen);
-    // p.setBrush(Qt::black);
-    // p.drawRoundedRect(bmp.rect(),50,50);
-    // setMask(bmp);
+    QBitmap bmp(this->size());//设置圆角边框
+    bmp.fill();
+    QPainter p(&bmp);
+    p.setPen(Qt::NoPen);
+    p.setBrush(Qt::black);
+    p.drawRoundedRect(bmp.rect(),50,50);
+    setMask(bmp);
 
 
     //初始化定时器
@@ -48,19 +49,16 @@ MainWindow::MainWindow(QWidget *parent)
     showActAnimation(Act::Work);
 
     //菜单属性
-    QMenu* menue = new QMenu(tr("File"), this);
+    //QMenu* menue = new QMenu(tr("File"), this);
     //初始化菜单
+    //创建菜单
+
     initMenue();
 
     /*设置窗口顶层让图标消失
     this->setWindowFlags(this->windowFlags() |Qt::Tool);
     */
 
-    /*  老版设置定时器
-        timer = new QTimer(this);
-        connect(timer,&QTimer::timeout,this,&MainWindow::showMovie);
-        timer->start(500);
-    */
 
 }
 
@@ -76,7 +74,7 @@ MainWindow::~MainWindow()
 */
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    //鼠标右键 与 点击
+    //鼠标右键 与 点击 与移动
     if (event->type() == QEvent::MouseMove) {
         //qDebug() << "Mouse Move Event:" << event->pos();
 
@@ -98,8 +96,15 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 */
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    //鼠标按下记录分量
-    m_pos = event->globalPosition().toPoint()-this->pos();
+
+    if(event->button() == Qt::RightButton) { //无论左键右键都识别到
+        menue->exec(QCursor::pos());
+        //点击 = 左键 or 右键  or 中键
+        qDebug() <<  event->type();
+    } else {
+        //鼠标按下记录分量
+        m_pos = event->globalPosition().toPoint()-this->pos();
+    }
 }
 
 /*
@@ -109,7 +114,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 */
 void MainWindow::enterEvent(QEvent *event)
 {
-    qDebug() << "Mouse Move Event:" ;
+
 }
 
 /*
@@ -143,7 +148,7 @@ void MainWindow::loadRoleActRes()
     };
 
     addRes(Act::Blink,":/sound/img/shime11",3);
-    addRes(Act::Drowse,":/sound/img/shime22",5);
+    addRes(Act::Drag,":/sound/img/shime22",5);
     addRes(Act::Sleep,":/sound/img/shime33",7);
     addRes(Act::Work,":/sound/img/shime44",2);
 }
@@ -167,7 +172,7 @@ void MainWindow::showActAnimation(Act::RoleAct act)
     参数：QAction *action
     返回值：void
 */
-void MainWindow::On_MenuTriggered(QAction *act)
+void MainWindow::On_MenuTriggered(QAction* act)
 {
     QMetaEnum List = QMetaEnum::fromType<Act::RoleAct>();
 
@@ -211,7 +216,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 */
 void MainWindow::contextMenuEvent()
 {
-    this->menue->popup(QCursor::pos());
+    //this->menue->popup(QCursor::pos());
     qDebug() << " 1";
 }
 
@@ -223,40 +228,49 @@ void MainWindow::contextMenuEvent()
 void MainWindow::initMenue()
 {
     // contextMenuEvent();
-    // menue->addAction("眨眼");
-    // menue->addAction("昏昏欲睡");
-    // menue->addAction("睡觉");
-    // menue->addAction("走路");
-    // menue->addAction("隐藏");
-    // QAction * act = new QAction("隐藏");
 
-    // connect(act, &QAction::triggered,[this](){
-    //         this->setVisible(false);
-    //     });
 
-    // connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
+    //connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
 
-    //创建菜单
-    QMenu* menu1 = new QMenu("文件");
-    QMenu* menu2 = new QMenu("编辑");
-    QMenu* menu3 = new QMenu("构建");
+    menue = new QMenu("动作");
 
     QMenuBar* menubar = this->menuBar();
 
     this->setMenuBar(menubar);
+    menubar->hide();
+
     //添加菜单到菜单栏中
-    menubar->addMenu(menu1);
-    menubar->addMenu(menu2);
-    menubar->addMenu(menu3);
+    menubar->addMenu(menue);
 
     //创建菜单项
-    QAction* action1 = new QAction("新建");
-    QAction* action2 = new QAction("打开");
-    QAction* action3 = new QAction("保存");
-    //添加菜单项到菜单中
-    menu1->addAction(action1);
-    menu1->addAction(action2);
-    menu1->addAction(action3);
+    QAction* action1 = new QAction("眨眼");
+    QAction* action2 = new QAction("昏昏欲睡");
+    QAction* action3 = new QAction("睡觉");
+    QAction* action4 = new QAction("走路");
+    QAction * action5 = new QAction("隐藏");
 
-    qDebug() << " 2";
+    //添加菜单项到菜单中
+    menue->addAction(action1);
+    menue->addAction(action2);
+    menue->addAction(action3);
+    menue->addAction(action4);
+    menue->addAction(action5);
+
+
+    //connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
+    connect(action1, &QAction::triggered,[this](){
+        showActAnimation(Act::Blink);
+    });
+    connect(action2, &QAction::triggered,[this](){
+        showActAnimation(Act::Drag);
+    });
+    connect(action3, &QAction::triggered,[this](){
+        showActAnimation(Act::Sleep);
+    });
+    connect(action4, &QAction::triggered,[this](){
+        showActAnimation(Act::Work);
+    });
+    connect(action5, &QAction::triggered,[this](){
+        this->setVisible(false);
+    });
 }
