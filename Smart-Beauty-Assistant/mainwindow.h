@@ -16,6 +16,9 @@
 #include <QMetaEnum>
 #include <QtGlobal>
 #include <typeinfo>
+#include <QNetworkReply>
+#include <QSystemTrayIcon>
+
 
 QT_BEGIN_NAMESPACE
 
@@ -64,11 +67,14 @@ public slots:
     //接收点击事件切换动作
     void On_MenuTriggered(QAction* act);
 
+
 private:
     //菜单
     void contextMenuEvent();
     //初始化菜单
     void initMenue();
+    //send json
+    void startRequest(QUrl url);
 
 protected:
     //绘图事件
@@ -100,6 +106,9 @@ private:
 
     //菜单属性
     QMenu* menue;
+
+    //返回网路响应结果
+    QNetworkReply *reply;
 
 };
 #endif // MAINWINDOW_H

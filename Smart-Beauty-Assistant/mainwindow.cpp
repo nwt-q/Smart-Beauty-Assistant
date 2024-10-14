@@ -48,17 +48,12 @@ MainWindow::MainWindow(QWidget *parent)
     //初始化动作
     showActAnimation(Act::Work);
 
-    //菜单属性
-    //QMenu* menue = new QMenu(tr("File"), this);
-    //初始化菜单
-    //创建菜单
 
     initMenue();
 
     /*设置窗口顶层让图标消失
     this->setWindowFlags(this->windowFlags() |Qt::Tool);
     */
-
 
 }
 
@@ -243,11 +238,11 @@ void MainWindow::initMenue()
     menubar->addMenu(menue);
 
     //创建菜单项
-    QAction* action1 = new QAction("眨眼");
-    QAction* action2 = new QAction("昏昏欲睡");
-    QAction* action3 = new QAction("睡觉");
-    QAction* action4 = new QAction("走路");
-    QAction * action5 = new QAction("隐藏");
+    QAction* action1 = new QAction(QIcon(":/sound/other/btn1.png"),"眨眼");
+    QAction* action2 = new QAction(QIcon(":/sound/other/btn1.png"),"昏昏欲睡");
+    QAction* action3 = new QAction(QIcon(":/sound/other/btn1.png"),"睡觉");
+    QAction* action4 = new QAction(QIcon(":/sound/other/btn1.png"),"走路");
+    QAction * action5 = new QAction(QIcon(":/sound/other/btn1.png"),"隐藏");
 
     //添加菜单项到菜单中
     menue->addAction(action1);
@@ -273,4 +268,12 @@ void MainWindow::initMenue()
     connect(action5, &QAction::triggered,[this](){
         this->setVisible(false);
     });
+}
+
+/*
+ * 功能 :发送请求
+*/
+void MainWindow::startRequest(QUrl url)
+{
+
 }
