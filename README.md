@@ -1,10 +1,6 @@
-
-
-![Build Notepad Next - passing (github.com)](https://github.com/dail8859/NotepadNext/workflows/Build Notepad Next/badge.svg)
-
-
-
 # 智能电子娘简介
+
+![Static Badge](https://img.shields.io/badge/GML-v4-green?logo=chatbot)![Static Badge](https://img.shields.io/badge/C%2B%2B-%20%3E%3D%2013.1.0-black?logo=cplusplus)
 
 [中文 ](https://github.com/cxasm/notepad--/blob/main/README.md)| [English](https://github.com/cxasm/notepad--/blob/main/README_EN.md)
 

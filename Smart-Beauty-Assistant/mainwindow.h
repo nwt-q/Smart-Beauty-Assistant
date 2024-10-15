@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "ai_module.h"
 #include <QMainWindow>
 #include <QPainter>
 #include <QPixmap>
@@ -16,7 +17,6 @@
 #include <QMetaEnum>
 #include <QtGlobal>
 #include <typeinfo>
-#include <QNetworkReply>
 #include <QSystemTrayIcon>
 
 
@@ -74,7 +74,7 @@ private:
     //初始化菜单
     void initMenue();
     //send json
-    void startRequest(QUrl url);
+    void start_ai();
 
 protected:
     //绘图事件
@@ -106,9 +106,6 @@ private:
 
     //菜单属性
     QMenu* menue;
-
-    //返回网路响应结果
-    QNetworkReply *reply;
 
 };
 #endif // MAINWINDOW_H

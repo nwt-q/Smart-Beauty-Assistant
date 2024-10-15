@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <string>
+//#include <string>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowFlags(this->windowFlags() |Qt::Tool);
     */
 
+    start_ai();
 }
 
 MainWindow::~MainWindow()
@@ -136,7 +137,7 @@ void MainWindow::loadRoleActRes()
             buf += QString::fromStdString(".png");
             //QUrl::fromLocalFile(buf) 将本地文件转换成QUrl类型
             paths.append(QUrl::fromLocalFile(buf));
-            qDebug() << buf;
+            //qDebug() << buf;
         }
         //完成动作与素材间的映射
         action_map.insert(act, paths);
@@ -271,9 +272,12 @@ void MainWindow::initMenue()
 }
 
 /*
- * 功能 :发送请求
+    功能：调用ai模块
+    参数：void
+    返回值：void
 */
-void MainWindow::startRequest(QUrl url)
+void MainWindow::start_ai()
 {
-
+    Ai_Module* GML = new Ai_Module();
+    GML->SendJsonData();
 }
