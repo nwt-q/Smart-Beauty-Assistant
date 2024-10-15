@@ -1,4 +1,5 @@
 #include "ai_module.h"
+#include <QTextToSpeech>
 
 Ai_Module::Ai_Module(QObject *parent)
     : QObject{parent}
@@ -40,7 +41,7 @@ void Ai_Module::SendJsonData()
     Exchange.insert("role","user");
 
     // QJsonValue &value
-    Exchange.insert("content","什么是Ai?");
+    Exchange.insert("content","创作一个更精准且吸引人的口号");
     // 定义 [ ] 对象
     QJsonArray MessagesArray;
     MessagesArray.append(Exchange);
@@ -78,6 +79,7 @@ void Ai_Module::SendJsonData()
 /*
  * 示例要发送的Json数据 *
 {
+  "model" : "glm-4-falsh" ,
   "messages": [
     {
       "role": "user",
@@ -108,23 +110,34 @@ void Ai_Module::SendJsonData()
 */
 
 //解析Json数据
-void Ai_Module::getJson(QJsonObject &jsonObj)
+QString Ai_Module::getJson(QJsonObject &jsonObj)
 {
     qDebug() << "------------------发送数据的返回---------------------";
-    // 将QJsonObject转换为QJsonDocument
-    QJsonDocument doc(jsonObj);
 
-    // 将QJsonDocument转换为格式化的字符串
-    QString jsonString = doc.toJson(QJsonDocument::Indented); // 使用Indented选项来美化输出
+    // 将QJsonObject转换为QJsonDocument, 解析json数据
+    QJsonDocument jsonDoc(jsonObj);
 
-    // 使用qDebug()打印字符串
-    qDebug() << jsonString;
+    if(!jsonDoc.isNull() && jsonDoc.isObject()) {
+        QJsonObject jsonObj = jsonDoc.object();
 
-    // QString code = jsonObj.value("code").toString();
-    // qDebug() << "code = " << code;
-    // QString msg = jsonObj.value("msg").toString();
-    // qDebug() << "msg = " << msg;
-    // bool result = jsonObj.value("result").toBool();
+        // 获取"choices"数组
+        QJsonArray choicesArray = jsonObj["choices"].toArray();
+
+        // 假设我们只需要第一个choice（根据索引0）
+        if (!choicesArray.isEmpty()) {
+            //代表获取一个元素
+            QJsonObject choiceObj = choicesArray[0].toObject();
+
+            // 获取"message"对象
+            QJsonObject messageObj = choiceObj["message"].toObject();
+
+            // 提取"content"字段的值
+            qDebug() << messageObj["content"].toString();
+
+            return messageObj["content"].toString();
+        }
+    }
+    return "";
 }
 
 //用来接收返回的Json数据
@@ -133,6 +146,35 @@ void Ai_Module::finshedSlot()
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray responseData = reply->readAll();
         qDebug() << "Response:" << responseData.data();
+
+        //转换格式
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(responseData);
+        QJsonObject jsonObj = jsonDoc.object();
+        QTextToSpeech* a = new QTextToSpeech();
+        //getJson(jsonObj);
+
+        //QTextToSpeech *b = new QTextToSpeech(); // 创建 QTextToSpeech 对象
+        // b->setVoice(QTextToSpeech::Voice("en_US")); // 设置语音，这里以英语（美国）为例
+        // b->setPitch(1.0); // 设置音调
+        // //b->setSpeechRate(0.5); // 设置语速
+
+        QTextToSpeech *textToSpeech = new QTextToSpeech();
+        QList<QVoice> voices = textToSpeech->availableVoices();
+
+        // 假设我们想要找到名为 "QLocale::Chinese" 的语音
+        QVoice voiceToUse;
+        foreach (const QVoice &voice, voices) {
+            if (voice.name() == QLocale::Chinese) {
+                voiceToUse = voice;
+                break;
+            }
+        }
+
+        // 如果找到了语音，则设置它
+        textToSpeech->setVoice(voiceToUse);
+
+        // 开始朗读文本
+        textToSpeech->say(getJson(jsonObj));
     } else {
         qDebug() << "Error:" << reply->errorString();
     }

@@ -37,7 +37,7 @@ public:
     //void SendImage();//发送图片文件
 public:
     //解析Json数据
-    void getJson(QJsonObject &jsonObj);
+    QString getJson(QJsonObject &jsonObj);
 
 signals:
 
