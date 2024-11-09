@@ -1,4 +1,5 @@
 #include "ai_module.h"
+
 #include <QTextToSpeech>
 
 Ai_Module::Ai_Module(QObject *parent)
@@ -41,11 +42,10 @@ void Ai_Module::SendJsonData()
     Exchange.insert("role","user");
 
     // QJsonValue &value
-    Exchange.insert("content","创作一个更精准且吸引人的口号");
+    Exchange.insert("content","你能做个自我介绍吗?");
     // 定义 [ ] 对象
     QJsonArray MessagesArray;
     MessagesArray.append(Exchange);
-
 
     Messages.insert("messages",MessagesArray);
 
@@ -75,6 +75,38 @@ void Ai_Module::SendJsonData()
     //     Ai_Module::reply->ignoreSslErrors(errors); // 忽略 SSL 错误（仅用于测试，生产环境中不建议）
     // });
 
+}
+
+void Ai_Module::SpeckResponse(QJsonObject &jsonObj)
+{
+    QTextToSpeech* a = new QTextToSpeech();
+    //getJson(jsonObj);
+
+    //QTextToSpeech *b = new QTextToSpeech(); // 创建 QTextToSpeech 对象
+    // b->setVoice(QTextToSpeech::Voice("en_US")); // 设置语音，这里以英语（美国）为例
+    // b->setPitch(1.0); // 设置音调
+    // //b->setSpeechRate(0.5); // 设置语速
+
+    QTextToSpeech *textToSpeech = new QTextToSpeech();
+    QList<QVoice> voices = textToSpeech->availableVoices();
+
+    // 假设我们想要找到名为 "QLocale::Chinese" 的语音
+    QVoice voiceToUse;
+    foreach (const QVoice &voice, voices) {
+        //qDebug() << voice.name() ;
+        if (voice.name() == QLocale::Chinese) {
+            voiceToUse = voice;
+            break;
+        }
+    }
+
+    // 如果找到了语音，则设置它
+    textToSpeech->setVoice(voiceToUse);
+
+    // 开始朗读文本
+    textToSpeech->say(getJson(jsonObj));
+    //speak_model speak;
+    //speak.startSpeckSend("D:\creatdome\onedome\Smart-Beauty-Assistant\Smart-Beauty-Assistant\1.pcm");
 }
 /*
  * 示例要发送的Json数据 *
@@ -151,30 +183,7 @@ void Ai_Module::finshedSlot()
         QJsonDocument jsonDoc = QJsonDocument::fromJson(responseData);
         QJsonObject jsonObj = jsonDoc.object();
         QTextToSpeech* a = new QTextToSpeech();
-        //getJson(jsonObj);
-
-        //QTextToSpeech *b = new QTextToSpeech(); // 创建 QTextToSpeech 对象
-        // b->setVoice(QTextToSpeech::Voice("en_US")); // 设置语音，这里以英语（美国）为例
-        // b->setPitch(1.0); // 设置音调
-        // //b->setSpeechRate(0.5); // 设置语速
-
-        QTextToSpeech *textToSpeech = new QTextToSpeech();
-        QList<QVoice> voices = textToSpeech->availableVoices();
-
-        // 假设我们想要找到名为 "QLocale::Chinese" 的语音
-        QVoice voiceToUse;
-        foreach (const QVoice &voice, voices) {
-            if (voice.name() == QLocale::Chinese) {
-                voiceToUse = voice;
-                break;
-            }
-        }
-
-        // 如果找到了语音，则设置它
-        textToSpeech->setVoice(voiceToUse);
-
-        // 开始朗读文本
-        textToSpeech->say(getJson(jsonObj));
+        SpeckResponse(jsonObj);
     } else {
         qDebug() << "Error:" << reply->errorString();
     }

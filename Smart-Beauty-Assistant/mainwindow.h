@@ -58,7 +58,7 @@ public:
     void mousePressEvent(QMouseEvent *event) override;
     //鼠标移入
     void enterEvent(QEvent *event);
-
+    void setTop();
 public slots:
     //加载动画
     void loadRoleActRes();
@@ -106,6 +106,9 @@ private:
 
     //菜单属性
     QMenu* menue;
+
+    //语音识别对象
+    speak_model speak;
 
 };
 #endif // MAINWINDOW_H

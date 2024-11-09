@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "Windows.h"
 //#include <string>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -7,7 +8,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     //设置窗口图标
     this->setWindowIcon(QIcon(":/sound/other/btn1.png"));
     //去除边框
@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowFlags(this->windowFlags() |Qt::Tool);
     */
 
-    start_ai();
+    //start_ai();
 }
 
 MainWindow::~MainWindow()
@@ -159,7 +159,7 @@ void MainWindow::showActAnimation(Act::RoleAct act)
     timer->stop();
 
     this->cur_role_act = act;
-
+    SetWindowPos((HWND)this->winId(),HWND_TOPMOST,this->pos().x(),this->pos().y(),this->width(),this->height(),SWP_SHOWWINDOW);
     timer->start(240);
 }
 
@@ -225,7 +225,6 @@ void MainWindow::initMenue()
 {
     // contextMenuEvent();
 
-
     //connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
 
     menue = new QMenu("动作");
@@ -243,7 +242,10 @@ void MainWindow::initMenue()
     QAction* action2 = new QAction(QIcon(":/sound/other/btn1.png"),"昏昏欲睡");
     QAction* action3 = new QAction(QIcon(":/sound/other/btn1.png"),"睡觉");
     QAction* action4 = new QAction(QIcon(":/sound/other/btn1.png"),"走路");
-    QAction * action5 = new QAction(QIcon(":/sound/other/btn1.png"),"隐藏");
+    QAction * action5 = new QAction(QIcon(":/sound/other/btn1.png"),"语音识别");
+    QAction * action6 = new QAction(QIcon(":/sound/other/btn1.png"),"停止识别");
+    QAction * action7 = new QAction(QIcon(":/sound/other/btn1.png"),"读取");
+    QAction * action8 = new QAction(QIcon(":/sound/other/btn1.png"),"隐藏");
 
     //添加菜单项到菜单中
     menue->addAction(action1);
@@ -251,7 +253,9 @@ void MainWindow::initMenue()
     menue->addAction(action3);
     menue->addAction(action4);
     menue->addAction(action5);
-
+    menue->addAction(action6);
+    menue->addAction(action7);
+    menue->addAction(action8);
 
     //connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
     connect(action1, &QAction::triggered,[this](){
@@ -267,6 +271,16 @@ void MainWindow::initMenue()
         showActAnimation(Act::Work);
     });
     connect(action5, &QAction::triggered,[this](){
+        speak.startSpeckSend("1.pcm");
+
+    });
+    connect(action6, &QAction::triggered,[this](){
+        speak.stopSpeakSend();
+    });
+    connect(action7, &QAction::triggered,[this](){
+        speak.ReadSpeak();
+    });
+    connect(action8, &QAction::triggered,[this](){
         this->setVisible(false);
     });
 }

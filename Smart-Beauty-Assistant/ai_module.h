@@ -2,10 +2,7 @@
 #define AI_MODULE_H
 
 #include <QObject>
-
-
-
-
+#include "speak_model.h"
 
 // json
 #include <QJsonArray>
@@ -33,8 +30,7 @@ public:
     explicit Ai_Module(QObject *parent = nullptr);
     void startRequest(QUrl url);
     void SendJsonData();//发送Json数据
-    //void SendMusic();//发送音乐文件
-    //void SendImage();//发送图片文件
+    void SpeckResponse(QJsonObject &jsonObj);
 public:
     //解析Json数据
     QString getJson(QJsonObject &jsonObj);
@@ -52,7 +48,6 @@ private:
     QString * api_key;
     int request_type;
     bool timeout;
-
 };
 
 #endif // AI_MODULE_H

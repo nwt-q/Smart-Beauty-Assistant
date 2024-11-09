@@ -1,6 +1,7 @@
-QT       += core gui
-QT       += core network
-QT     += texttospeech
+QT      += core gui
+QT      += core network
+QT      += texttospeech
+QT      += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,11 +14,13 @@ CONFIG += c++17
 SOURCES += \
     ai_module.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    speak_model.cpp
 
 HEADERS += \
     ai_module.h \
-    mainwindow.h
+    mainwindow.h \
+    speak_model.h
 
 FORMS += \
     mainwindow.ui

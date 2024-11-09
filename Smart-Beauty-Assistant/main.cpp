@@ -1,12 +1,16 @@
 #include "mainwindow.h"
-
 #include <QApplication>
+
+// BOOL CALLBACK ShowWindowsProc(HWND hwnd, LPARAM lParam) {
+//     wchar_t szTitle[MAX_PATH] = {0};
+//     GetWindowText(hwnd,szTitle, MAX_PATH);
+//     return TRUE;
+// }
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-
     //系统图标
     QSystemTrayIcon sysTray(QIcon(":/sound/other/btn1.png"),&w);
 

@@ -78,5 +78,7 @@
         <file>sound/POP.wav</file>
         <file>sound/POP2.wav</file>
         <file>sound/run.wav</file>
+        <file>C:/Users/NWT/Music/wc.mp3</file>
+        <file>sound/wc.mp3</file>
     </qresource>
 </RCC>
