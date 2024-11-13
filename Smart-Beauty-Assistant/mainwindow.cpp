@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowFlags(this->windowFlags() |Qt::Tool);
     */
 
-    //start_ai();
+    start_ai();
 }
 
 MainWindow::~MainWindow()
@@ -223,10 +223,6 @@ void MainWindow::contextMenuEvent()
 */
 void MainWindow::initMenue()
 {
-    // contextMenuEvent();
-
-    //connect(this->menue,&QMenu::triggered,this,&MainWindow::On_MenuTriggered);
-
     menue = new QMenu("动作");
 
     QMenuBar* menubar = this->menuBar();

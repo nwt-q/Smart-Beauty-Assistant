@@ -42,7 +42,7 @@ void Ai_Module::SendJsonData()
     Exchange.insert("role","user");
 
     // QJsonValue &value
-    Exchange.insert("content","你能做个自我介绍吗?");
+    Exchange.insert("content","李白是哪个朝代的诗人");
     // 定义 [ ] 对象
     QJsonArray MessagesArray;
     MessagesArray.append(Exchange);
